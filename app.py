@@ -427,7 +427,7 @@ app.layout = html.Div(
                     [
                     dcc.Tabs(id='tabs-example', value='tab-1', children=[
                     dcc.Tab(label='Distancia Recorrida', value='tab-1', children=[
-                         dcc.Graph(id='graph222', style={'height':'45vh'}),
+                         dcc.Graph(id='graph222'),
                     ]),
                     dcc.Tab(label='Distancia Acumulada', value='tab-2', children=[
                     html.Div([
@@ -627,8 +627,10 @@ def update_figure(rows, selected_row_indices):
         #bargroupgap=0,
         #barmode='group',
         #showlegend=False,
-        height='45v',
+        height=350,
         dragmode="select",
+        #paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
         xaxis=dict(
             #showgrid=False,
             #nticks=50,
