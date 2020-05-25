@@ -627,6 +627,7 @@ def update_figure(rows, selected_row_indices):
         #bargroupgap=0,
         #barmode='group',
         #showlegend=False,
+        height='45v',
         dragmode="select",
         xaxis=dict(
             #showgrid=False,
