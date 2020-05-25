@@ -50,14 +50,14 @@ def create_df():
     # intialise data of lists.
     datenow = datetime.datetime.now().date()
     now = datenow.isoformat()
-    hoy_inicio = calcular_fecha(0)
-    exacto = calcular_exacto()
+    hoy_inicio = '2020-05-16T00:00:00Z' #calcular_fecha(0)
+    exacto = '2020-05-16T23:00:00Z' #calcular_exacto()
     parameters = {'deviceId' : 4,
     'from' :  hoy_inicio,
     'to' : exacto }
     response = requests.get(url + '/api/reports/route', auth=(user, password), headers=headers, params=parameters)
     data = json.loads(response.content)
-    if not data:
+    if data:
         dataframe = json_normalize(data)
         df_distance = dataframe[['latitude', 'longitude', 'altitude', 'deviceTime', 'fixTime', 'attributes.distance', 'attributes.totalDistance', 'attributes.batteryLevel', 'speed']]
         df_distance['acum_distance'] = df_distance['attributes.distance'].cumsum()/1000 

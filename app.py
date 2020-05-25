@@ -290,7 +290,7 @@ app.layout = html.Div(
                         'padding-right': 0
                     },
                         ),
-                        html.H2("Usuario: Juan Andres    \n Día: 20 de mayo"),
+                        html.H2("Usuario: Juan Andres    \n Día: 16 de mayo"),
             
                         html.P(
                             'Selecciona la cantidad de distancia recorrida en el día:'
