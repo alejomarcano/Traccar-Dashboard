@@ -290,7 +290,8 @@ app.layout = html.Div(
                         'padding-right': 0
                     },
                         ),
-                        html.H2("Usuario: Juan Andres"),
+                        html.H2("Usuario: Juan Andres    \n Día: 20 de mayo"),
+            
                         html.P(
                             'Selecciona la cantidad de distancia recorrida en el día:'
                         ),
@@ -313,7 +314,7 @@ app.layout = html.Div(
                             ],
                         ),
                         html.P(
-                            """Selecciona un rango de hora"""
+                            """Selecciona la distancia de km recorrido en el día """
                         ), 
 
                         # html.Div(
@@ -426,7 +427,7 @@ app.layout = html.Div(
                     [
                     dcc.Tabs(id='tabs-example', value='tab-1', children=[
                     dcc.Tab(label='Distancia Recorrida', value='tab-1', children=[
-                         dcc.Graph(id='graph222'),
+                         dcc.Graph(id='graph222', style={'height':'45vh'}),
                     ]),
                     dcc.Tab(label='Distancia Acumulada', value='tab-2', children=[
                     html.Div([
