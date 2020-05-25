@@ -28,15 +28,12 @@ help_info = """
 #info = 
 
 USERNAME_PASSWORD_PAIRS = [
-    ['alejo', '123456'],
+    ['vikua', 'kunigo'],
     ['Juan Andres', '12356']
 ]
-print('esta es la lista ')
 #print(USERNAME_PASSWORD_PAIRS)
 
-for i in USERNAME_PASSWORD_PAIRS:
-    for j in i:
-        print('varoles de ', j)
+
 
 # Plotly mapbox public token
 
@@ -59,7 +56,7 @@ app.config['suppress_callback_exceptions'] = True
 
 
 map_data = create_df()
-
+print('Este es el maximo',map_data['acum_distance'].max())
 # df_distance = pd.read_csv("distances_dash.csv")
 # df_distance = df_distance[['time', 'attributes.distance', 'latitude', 'longitude', 'altitude', 'deviceTime', 'fixTime', 'attributes.totalDistance', 'attributes.batteryLevel', 'speed', 'partday']]
 # df_distance['acum_distance'] = df_distance['attributes.distance'].cumsum() 
@@ -295,7 +292,7 @@ app.layout = html.Div(
                         ),
                         html.H2("Usuario: Juan Andres"),
                         html.P(
-                            'Selecciona el rango del dia:'
+                            'Selecciona la cantidad de distancia recorrida en el día:'
                         ),
                         #html.Button('Submit', id='submit-val', n_clicks=0),
                         
@@ -319,30 +316,41 @@ app.layout = html.Div(
                             """Selecciona un rango de hora"""
                         ), 
 
-                        html.Div(
-                            className="div-for-dropdown",
-                            children=[
-                        dcc.RangeSlider(
-                                id='myslider',
+                        # html.Div(
+                        #     className="div-for-dropdown",
+                        #     children=[
+                        # dcc.RangeSlider(
+                        #         id='myslider',
+                        #         min=0,
+                        #         max=23,
+                        #         #marks={i : {'label' : "{}".format(i+1), 'style':{ 'font-size':'8px'}} for i in range(0, 23) if i %5 ==0},
+                        #         marks={
+                        #         0: {'label': '12 AM', 'style': { 'font-size':'10px'}},
+                        #         3: {'label': '3 AM', 'style': { 'font-size':'10px'}},
+                        #         6: {'label': '6 AM',  'style': { 'font-size':'10px'}},
+                        #         9: {'label': '9 PM',  'style': { 'font-size':'10px'}},
+                        #         12: {'label': '12 PM', 'style': { 'font-size':'10px'}},
+                        #         15: {'label': '3 PM',  'style': { 'font-size':'10px'}},
+                        #         18: {'label': '6 PM', 'style': { 'font-size':'10px'}},
+                        #         21: {'label': '9 PM',  'style': { 'font-size':'10px'}},
+                        #         },
+                        #         value=[0, 23],
+                        #         allowCross=False,
+                        #     ),
+                        #         #html.Div(id='sliderhoras'), 
+                        #     ],
+                        # ),
+
+                        html.Div([
+                            dcc.Slider(
+                                id='elslider',
                                 min=0,
-                                max=23,
-                                #marks={i : {'label' : "{}".format(i+1), 'style':{ 'font-size':'8px'}} for i in range(0, 23) if i %5 ==0},
-                                marks={
-                                0: {'label': '12 AM', 'style': { 'font-size':'10px'}},
-                                3: {'label': '3 AM', 'style': { 'font-size':'10px'}},
-                                6: {'label': '6 AM',  'style': { 'font-size':'10px'}},
-                                9: {'label': '9 PM',  'style': { 'font-size':'10px'}},
-                                12: {'label': '12 PM', 'style': { 'font-size':'10px'}},
-                                15: {'label': '3 PM',  'style': { 'font-size':'10px'}},
-                                18: {'label': '6 PM', 'style': { 'font-size':'10px'}},
-                                21: {'label': '9 PM',  'style': { 'font-size':'10px'}},
-                                },
-                                value=[0, 23],
-                                allowCross=False,
+                                max= map_data['acum_distance'].max(),
+                                step=0.1,
+                                value=map_data['acum_distance'].max(),
                             ),
-                                #html.Div(id='sliderhoras'), 
-                            ],
-                        ),
+                            html.Div(id='slider-output-container')
+                        ]),
 
                         # html.P(
                         #     """Selecciona el tiempo del dia """
@@ -444,7 +452,7 @@ app.layout = html.Div(
                                 },
 
                             'yaxis' : {
-                                'title': 'Distancia Acumulada (metros)',
+                                'title': 'Distancia Acumulada (Km)',
                                # 'showspikes': True,
                                # 'spikedash': 'dot',
                                # 'spikemode': 'across',
@@ -568,9 +576,9 @@ def map_selection(rows, selected_row_indices):
     Output('datatable', 'rows'),
     [#Input('type', 'value'),
      Input('boroughs', 'values'),
-     #Input('myslider', 'value') 
+     Input('elslider', 'value') 
     ])
-def update_selected_row_indices(borough):
+def update_selected_row_indices(borough, elslider):
     map_aux = map_data.copy()
 
     # Type filter
@@ -579,8 +587,8 @@ def update_selected_row_indices(borough):
     map_aux = map_aux[map_aux["partday"].isin(borough)]
 
     #map_aux = map_aux[map_aux["hour"].isin(myslider)]
-    #print('Este es slider', myslider)
-
+    print('Este es slider', elslider)
+    map_aux = map_aux[map_aux["acum_distance"] <= elslider]
     #print('Estos son los indices', selected_row_indices)
     #if selected_row_indices:
     #    map_aux = map_aux.iloc[selected_row_indices]
@@ -646,6 +654,13 @@ def update_figure(rows, selected_row_indices):
      ])
 
     return go.Figure(data=data, layout=layout)
+
+
+@app.callback(
+    dash.dependencies.Output('slider-output-container', 'children'),
+    [dash.dependencies.Input('elslider', 'value')])
+def update_output(value):
+    return 'Has seleccionado {:.2f} Km acumulados en el día'.format(value)
 
 # @app.callback(Output('tabs-example-content', 'children'),
 #               [Input('tabs-example', 'value') Input('datatable', 'rows'), Input('datatable', 'selected_row_indices')])

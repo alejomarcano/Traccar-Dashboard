@@ -57,10 +57,10 @@ def create_df():
     'to' : exacto }
     response = requests.get(url + '/api/reports/route', auth=(user, password), headers=headers, params=parameters)
     data = json.loads(response.content)
-    if data:
+    if not data:
         dataframe = json_normalize(data)
         df_distance = dataframe[['latitude', 'longitude', 'altitude', 'deviceTime', 'fixTime', 'attributes.distance', 'attributes.totalDistance', 'attributes.batteryLevel', 'speed']]
-        df_distance['acum_distance'] = df_distance['attributes.distance'].cumsum() 
+        df_distance['acum_distance'] = df_distance['attributes.distance'].cumsum()/1000 
         #dataframe['acum_distance'] = dataframe['attributes.distance'].cumsum()
         date = []
         time = []
@@ -80,7 +80,8 @@ def create_df():
         partday = []
         [partday.append(get_part_of_day(df_distance['time'][key])) for key, value in df_distance['time'].iteritems()]
         df_distance["partday"] = partday
-        df_distance['acum_distance'] = df_distance['attributes.distance'].cumsum() 
+        df_distance['acum_distance'] = df_distance['attributes.distance'].cumsum()
+        df_distance['acum_distance'] = df_distance['acum_distance']/1000
         df_distance = df_distance[['time', 'attributes.distance', 'latitude', 'longitude', 'altitude', 'deviceTime', 'fixTime', 'attributes.totalDistance', 'attributes.batteryLevel', 'speed', 'partday', 'acum_distance']]
         df_distance.rename(columns={'time':'hora', 'attributes.distance':'distancia'}, inplace=True)
         df_distance['speed_Km'] = df_distance['speed']*1.852
@@ -89,7 +90,8 @@ def create_df():
     else:
         df_distance = pd.read_csv("distances_dash.csv")
         df_distance = df_distance[['time', 'attributes.distance', 'latitude', 'longitude', 'altitude', 'deviceTime', 'fixTime', 'attributes.totalDistance', 'attributes.batteryLevel', 'speed', 'partday']]
-        df_distance['acum_distance'] = df_distance['attributes.distance'].cumsum() 
+        df_distance['acum_distance'] = df_distance['attributes.distance'].cumsum()
+        df_distance['acum_distance'] = df_distance['acum_distance']/1000
         df_distance['speed_Km'] = df_distance['speed']*1.852
         df_distance.rename(columns={'time':'hora', 'attributes.distance':'distancia'}, inplace=True)
         df_distance['horita'] = pd.to_datetime(df_distance['hora'], format='%H:%M:%S')
