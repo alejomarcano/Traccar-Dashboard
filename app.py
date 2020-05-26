@@ -47,10 +47,9 @@ app = dash.Dash(
 
 auth = dash_auth.BasicAuth(app, USERNAME_PASSWORD_PAIRS)
 server = app.server
-app.config.suppress_callback_exceptions = True
-app.server.config.suppress_callback_exceptions = True
-app.config['suppress_callback_exceptions'] = True
-#app.config['suppress_callback_exceptions']=True
+# app.config.suppress_callback_exceptions = True
+# app.server.config.suppress_callback_exceptions = True
+# app.config['suppress_callback_exceptions'] = True
 
 
 
@@ -67,7 +66,7 @@ print('Este es el maximo',map_data['acum_distance'].max())
 
 #map_data = df_distance
 
-print(map_data.head())
+print(map_data.columns)
 #  Layouts
 layout_table = dict(
     autosize=False,
@@ -90,7 +89,7 @@ layout_table['margin-top'] = '8'
 
 layout_map = dict(
     autosize=True,
-    #height=500,
+    height=400,
     margin=go.layout.Margin(l=0, r=35, t=0, b=0),
     bearing=0,
     font=dict(color="#191A1A"),
@@ -113,7 +112,7 @@ layout_map = dict(
             lon=map_data['longitude'].mean(),
             lat=map_data['latitude'].mean()
         ),
-        zoom=17,
+        zoom=10,
     ),
     updatemenus=[
         dict(
@@ -154,36 +153,6 @@ layout_map = dict(
         ),
     ]
 )
-graph_layout = dcc.Graph(
-                id='graph',
-                figure={
-                    'data': [
-                        {
-                            'x': [1, 2, 3, 4],
-                            'y': [4, 1, 3, 5],
-                            'text': ['a', 'b', 'c', 'd'],
-                            'customdata': ['c.a', 'c.b', 'c.c', 'c.d'],
-                            'name': 'Trace 1',
-                            'mode': 'markers',
-                            'marker': {'size': 12}
-                        },
-                        {
-                            'x': [1, 2, 3, 4],
-                            'y': [9, 4, 1, 4],
-                            'text': ['w', 'x', 'y', 'z'],
-                            'customdata': ['c.w', 'c.x', 'c.y', 'c.z'],
-                            'name': 'Trace 2',
-                            'mode': 'markers',
-                            'marker': {'size': 12}
-                        }
-                    ],
-                    'layout': {
-                        'clickmode': 'event+select'
-                    }
-                }
-            )
-
-
 
 def gen_map(map_data):
 
@@ -290,7 +259,34 @@ app.layout = html.Div(
                         'padding-right': 0
                     },
                         ),
-                        html.H2("Usuario: Juan Andres    \n Día: 16 de mayo"),
+                        html.H2("Usuario: URBO-9 \n Día: 25 de mayo"),
+                        # html.P(
+                        #     """Selecciona el dispositivo a consultar"""
+                        # ),                        
+                        # html.Div(
+                        #     className="div-for-dropdown",
+                        #             children=[
+                        #                 # Dropdown for locations on map
+                        # dcc.Dropdown(
+                        #     id='type',
+                        #     options= [{'label': str(item), 'value': str(item)} for item in set(map_data['partday'])],
+                        #     multi=True,
+                        #     value=list(set(map_data['partday']))
+                        # )
+                        # ],
+                        # ),
+                        # html.Div([
+                        #     dcc.Dropdown(
+                        #         id='demo-dropdown',
+                        #         options=[
+                        #             {'label': 'New York City', 'value': 'NYC'},
+                        #             {'label': 'Montreal', 'value': 'MTL'},
+                        #             {'label': 'San Francisco', 'value': 'SF'}
+                        #         ],
+                        #         value='NYC'
+                        #     ),
+                        #     html.Div(id='dd-output-container')
+                        # ]),
             
                         html.P(
                             'Selecciona la cantidad de distancia recorrida en el día:'
@@ -353,22 +349,6 @@ app.layout = html.Div(
                             html.Div(id='slider-output-container')
                         ]),
 
-                        # html.P(
-                        #     """Selecciona el tiempo del dia """
-                        # ),                        
-                        # html.Div(
-                        #     className="div-for-dropdown",
-                        #             children=[
-                        #                 # Dropdown for locations on map
-                        # dcc.Dropdown(
-                        #     id='type',
-                        #     options= [{'label': str(item), 'value': str(item)} for item in set(map_data['partday'])],
-                        #     multi=True,
-                        #     value=list(set(map_data['partday']))
-                        # )
-                        #             ],
-                        #         ),
-                        
                         
                         #html.H2("Tabla"),
                         html.P(
@@ -541,9 +521,9 @@ app.layout = html.Div(
                         
                         )],className= 'twelve columns'),
                     ]),
-                    dcc.Tab(label='Notificaciones', value='tab-5', children=[
+                    # dcc.Tab(label='Notificaciones', value='tab-5', children=[
 
-                    ]),
+                    # ]),
                     ]
                     ),
                     html.Div(id='tabs-example-content')
@@ -818,5 +798,14 @@ def update_output(value):
 #             )],className= 'twelve columns'),
 #     elif tab == 'tab-5':
 #         return  html.Div([dcc.Graph(id='graph222')]) 
+
+
+# @app.callback(
+#     dash.dependencies.Output('dd-output-container', 'children'),
+#     [dash.dependencies.Input('demo-dropdown', 'value')])
+# def update_output(value):
+#     return 'Has seleccionado "{}"'.format(value)
+
+
 if __name__ == "__main__":
     app.run_server(debug=True)

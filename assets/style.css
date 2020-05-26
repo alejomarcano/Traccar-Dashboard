@@ -13,7 +13,7 @@ h1, h2, h3, h4, h5 {
   font-family: "Open Sans";
   font-weight: bold;
   letter-spacing: 1.5px;
-  font-size: 18px;
+  font-size: 14px;
   padding-left: 12px;
 }
 p {
@@ -69,11 +69,7 @@ a {
   padding-bottom: 2px;
   margin-left: 8px;
 } */
-.Select-control, .Select-menu-outer, .Select-multi-value-wrapper, .select-up, .is-open .Select-control {
-  background-color: #1E1E1E;
-  color: white;
-  
-}
+
 
 #bar-selector .Select-multi-value-wrapper{
   max-height: 82px;
@@ -82,29 +78,24 @@ a {
 }
 
 .Select-control{
-  border: 0.5px solid #dbdbdb44;
+  border: 0.5px solid ;
 }
 
-.has-value.Select--single>.Select-control .Select-value .Select-value-label, .has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-label {
-  color: white;
-}
+
 ._dash-app-content {
   overflow-x: hidden;
   overflow-y: hidden;
   position: relative;
 }
 .has-value.Select--single>.Select-control .Select-value .Select-value-label, .has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-label{
-  color: #d8d8d8;
   font-weight: 400;
   font-size: 14px;
 }
 
 
 #date {
-  background-color: #1e1e1e;
   font-family: "Open Sans";
   font-weight: 400;
-  color: #dbdbdb;
   border: 0.5px solid #dbdbdb44;
 }
 
@@ -122,16 +113,7 @@ a {
   border:none;
 }
 
-.DateInput.DateInput_1 {
-  background-color: #1e1e1e;
-}
 
-.SingleDatePickerInput__withBorder {
-  border-radius: 3px;
-  color: #dbdbdb;
-  background: #1e1e1e;
-  background-color: #1e1e1e;
-}
 .SingleDatePickerInput.SingleDatePickerInput_1.SingleDatePickerInput__withBorder.SingleDatePickerInput__withBorder_2 {
   border: 0.0px solid #dbdbdb;
   display: block;
@@ -191,12 +173,6 @@ a {
   display: block !important;
 }
 
-/* Track */
-::-webkit-scrollbar-track {
-  background: #1e1e1e !important; 
-  border-radius: 10px !important;
-  display: block !important;
-}
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
