@@ -14,6 +14,9 @@ from plotly.graph_objs import *
 #from datetime import datetime as dt
 from pandas.io.json import json_normalize
 from datos import create_df
+from datetime import datetime
+import re
+
 import flask
 
 import requests
@@ -54,8 +57,7 @@ server = app.server
 
 
 
-map_data = create_df()
-print('Este es el maximo',map_data['acum_distance'].max())
+map_data, frame = create_df()
 # df_distance = pd.read_csv("distances_dash.csv")
 # df_distance = df_distance[['time', 'attributes.distance', 'latitude', 'longitude', 'altitude', 'deviceTime', 'fixTime', 'attributes.totalDistance', 'attributes.batteryLevel', 'speed', 'partday']]
 # df_distance['acum_distance'] = df_distance['attributes.distance'].cumsum() 
@@ -66,7 +68,8 @@ print('Este es el maximo',map_data['acum_distance'].max())
 
 #map_data = df_distance
 
-print(map_data.columns)
+print('Este es el frame', frame)
+
 #  Layouts
 layout_table = dict(
     autosize=False,
@@ -87,75 +90,9 @@ layout_table = dict(
 layout_table['font-size'] = '8'
 layout_table['margin-top'] = '8'
 
-layout_map = dict(
-    autosize=True,
-    height=400,
-    margin=go.layout.Margin(l=0, r=35, t=0, b=0),
-    bearing=0,
-    font=dict(color="#191A1A"),
-    titlefont=dict(color="#191A1A", size='14'),
-    # margin=dict(
-    #     l=35,
-    #     r=35,
-    #     b=35,
-    #     t=10
-    # ),
-    hovermode="closest",
-    plot_bgcolor='#fffcfc',
-    paper_bgcolor='#fffcfc',
-    #legend=dict(font=dict(size=10), orientation='h'),
-    #title='Posiciones del dispositivo',
-    mapbox=dict(
-        accesstoken=mapbox_access_token,
-        style="streets",
-        center=dict(
-            lon=map_data['longitude'].mean(),
-            lat=map_data['latitude'].mean()
-        ),
-        zoom=10,
-    ),
-    updatemenus=[
-        dict(
-            type = "buttons",
-            buttons=list([
-                dict(
-                    args=[
-                    {
-                        "mapbox.style": "streets",
-                    }
-                    ],
-                    label="Mapa Claro",
-                    method="relayout"
-                ),
-                dict(
-                    args=[
-                    {
-                        "mapbox.style": "dark",
-                        "colorscale": "Inferno",
-                    }
-                    ],
-                    label="Mapa Oscuro",
-                    method="relayout"
-                )
-            ]),
-            direction="left",
-            pad={"r": 0, "t": 0, "b": 0, "l": 0},
-            showactive=True,
-            #type="buttons",
-            x=0.45,
-            y=0.02,
-            xanchor="left",
-            yanchor="bottom",
-            #bgcolor="#323130",
-            borderwidth=1,
-            #bordercolor="#6d6d6d",
-            #font=dict(color="#FFFFFF"),
-        ),
-    ]
-)
+
 
 def gen_map(map_data):
-
     return {
         "data": [{
                 "type": "scattermapbox",
@@ -184,7 +121,72 @@ def gen_map(map_data):
                 ),  
 
         }],
-        "layout": layout_map,
+        "layout": dict(
+            autosize=True,
+            height=400,
+            margin=go.layout.Margin(l=0, r=35, t=0, b=0),
+            bearing=0,
+            font=dict(color="#191A1A"),
+            titlefont=dict(color="#191A1A", size='14'),
+            # margin=dict(
+            #     l=35,
+            #     r=35,
+            #     b=35,
+            #     t=10
+            # ),
+            hovermode="closest",
+            plot_bgcolor='#fffcfc',
+            paper_bgcolor='#fffcfc',
+            #legend=dict(font=dict(size=10), orientation='h'),
+            #title='Posiciones del dispositivo',
+            mapbox=dict(
+                accesstoken=mapbox_access_token,
+                style="streets",
+                center=dict(
+                    lon=-74.7889,
+                    lat=10.9878
+                ),
+                zoom=10,
+            ),
+            updatemenus=[
+                dict(
+                    type = "buttons",
+                    buttons=list([
+                        dict(
+                            args=[
+                            {
+                                "mapbox.style": "streets",
+                            }
+                            ],
+                            label="Mapa Claro",
+                            method="relayout"
+                        ),
+                        dict(
+                            args=[
+                            {
+                                "mapbox.style": "dark",
+                                "colorscale": "Inferno",
+                            }
+                            ],
+                            label="Mapa Oscuro",
+                            method="relayout"
+                        )
+                    ]),
+                    direction="left",
+                    pad={"r": 0, "t": 0, "b": 0, "l": 0},
+                    showactive=True,
+                    #type="buttons",
+                    x=0.45,
+                    y=0.02,
+                    xanchor="left",
+                    yanchor="bottom",
+                    #bgcolor="#323130",
+                    borderwidth=1,
+                    #bordercolor="#6d6d6d",
+                    #font=dict(color="#FFFFFF"),
+                ),
+            ]
+        ),
         "update_layout": dict(
     updatemenus=[
         dict(
@@ -252,14 +254,14 @@ app.layout = html.Div(
                         html.Img(
                             className="logo",  src="https://res.cloudinary.com/vikua/image/upload/v1590017694/samples/URBO/Logo_Vikua_gof6mb.png",
                     style={
-                        'height': '600%',
-                        'width': '60%',
+                        'height': '45%',
+                        'width': '45%',
                         'position': 'relative',
                         'padding-top': 0,
                         'padding-right': 0
                     },
                         ),
-                        html.H2("Usuario: URBO-9 \n Día: 25 de mayo"),
+                        html.H2("Usuario: urbo@vikua.com \n Día: 25 de mayo"),
                         # html.P(
                         #     """Selecciona el dispositivo a consultar"""
                         # ),                        
@@ -275,21 +277,38 @@ app.layout = html.Div(
                         # )
                         # ],
                         # ),
-                        # html.Div([
-                        #     dcc.Dropdown(
-                        #         id='demo-dropdown',
-                        #         options=[
-                        #             {'label': 'New York City', 'value': 'NYC'},
-                        #             {'label': 'Montreal', 'value': 'MTL'},
-                        #             {'label': 'San Francisco', 'value': 'SF'}
-                        #         ],
-                        #         value='NYC'
-                        #     ),
-                        #     html.Div(id='dd-output-container')
-                        # ]),
+
+                        html.P(
+                            'Selecciona el día:'
+                        ),
+
+
+                            html.Div([
+                                dcc.DatePickerSingle(
+                                    id='mydate',
+                                    min_date_allowed=datetime(2020, 5, 1),
+                                    max_date_allowed=datetime(2020, 5, 30),
+                                    initial_visible_month=datetime(2020, 5, 5),
+                                    date=str(datetime(2020, 5, 25).date()),
+                                ),
+                                html.Div(id='output-container-date-picker-single')
+                            ]),            
+       
+
+                        html.P(
+                            'Selecciona el dispositivo:'
+                        ),
+                        html.Div([
+                            dcc.Dropdown(
+                                id='dropdown',
+                                #options= [{'label': str(item), 'value': item} for item in set(map_data['deviceId'])],
+                                #value='URBO-9',
+                            ),
+                            html.Div(id='dd-output-container')
+                        ]),
             
                         html.P(
-                            'Selecciona la cantidad de distancia recorrida en el día:'
+                            'Selecciona el intervalo de horas:'
                         ),
                         #html.Button('Submit', id='submit-val', n_clicks=0),
                         
@@ -396,7 +415,7 @@ app.layout = html.Div(
                 html.Div(
                     className="nine columns div-for-charts",
                     children=[
-                        dcc.Graph(id='map-graph', animate=True, style=layout_map),
+                        dcc.Graph(id='map-graph', animate=True),
                         html.Div(
                             className="text-padding",
                             children=[
@@ -410,79 +429,12 @@ app.layout = html.Div(
                          dcc.Graph(id='graph222'),
                     ]),
                     dcc.Tab(label='Distancia Acumulada', value='tab-2', children=[
-                    html.Div([
-                        dcc.Graph(id='distancia_acumulada',  style={'height':'45vh'},
-                        figure={
-                            'data': [
-                                go.Scatter(x=map_data['deviceTime'], y=map_data['acum_distance'],
-                                            mode='lines+markers',
-                                            name='lines+markers',
-                                            line = dict(color='orange', width=1))
-                            ],
-
-                        'layout':{
-                            'title' : "Distancia Acumulada en el dia",
-                            "dragmode" :"select",
-
-                            'xaxis' : {
-                                'title': 'Tiempo (horas)',
-                               # 'showspikes': True,
-                               # 'spikedash': 'dot',
-                               # 'spikemode': 'across',
-                               # 'spikesnap': 'cursor',
-                                },
-
-                            'yaxis' : {
-                                'title': 'Distancia Acumulada (Km)',
-                               # 'showspikes': True,
-                               # 'spikedash': 'dot',
-                               # 'spikemode': 'across',
-                               # 'spikesnap': 'cursor',
-                                },
-                        },
-                        }
-                        
-                        )],className= 'twelve columns'),
-
-
+                        dcc.Graph(id='grafico_distancia'),
 
                     ]),
                     dcc.Tab(label='Velocidad Detectada', value='tab-3', children=[
-                    html.Div([
-                        
-                        
-                        dcc.Graph(id='velocidad_detectada',  style={'height':'45vh'},
-                        figure={
-                            'data': [
-                                go.Scatter(x=map_data['deviceTime'], y=map_data['speed_Km'],
-                                            mode='lines+markers',
-                                            name='lines+markers',
-                                            line = dict(color='blue', width=1))
-                            ],
+                         dcc.Graph(id='velocidad_detectada'),
 
-                        'layout':{
-                            'title' : "Velocidad detectada en el dia",
-                            "dragmode" :"select",
-
-                            'xaxis' : {
-                                'title': 'Hora',
-                                'showspikes': True,
-                                'spikedash': 'dot',
-                                'spikemode': 'across',
-                                'spikesnap': 'cursor',
-                                },
-
-                            'yaxis' : {
-                                'title': 'Velocidad (Km/h)',
-                                'showspikes': True,
-                                'spikedash': 'dot',
-                                'spikemode': 'across',
-                                'spikesnap': 'cursor',
-                                },
-                        },
-                        }
-                        
-                        )],className= 'twelve columns'),
                     ]),
                     dcc.Tab(label='Batería del Dispositivo', value='tab-4', children=[
                     html.Div([
@@ -544,42 +496,78 @@ app.layout = html.Div(
 
 @app.callback(
     Output('map-graph', 'figure'),
-    [Input('datatable', 'rows'),
+    [Input('datatable', 'rows'), Input('dropdown', 'value'),
      Input('datatable', 'selected_row_indices')])
-def map_selection(rows, selected_row_indices):
+def map_selection(rows, dropdown, selected_row_indices):
     aux = pd.DataFrame(rows)
+    #lat = aux[aux['deviceId'] == dropdown]['latitude'].mean()
+    #lon = aux[aux['deviceId'] == dropdown]['longitude'].mean()
+    # filtro_zoom = aux[aux['deviceId'] == dropdown]['distancia'].sum() 
+    # if filtro_zoom  < 100:
+    #     zoom = 18
+    # elif filtro_zoom > 100000:
+    #     zoom = 10
+    # elif  100  <= filtro_zoom < 500:
+    #     zoom = 17
+    # elif  500  <= filtro_zoom < 1000:
+    #     zoom = 16
+    # elif  1000  <= filtro_zoom < 2000:
+    #     zoom = 15
+    # elif  2000  <= filtro_zoom < 5000:
+    #     zoom = 14
+    # elif  5000  <= filtro_zoom < 10000:
+    #     zoom = 13
+    # else:
+    #     zoom = 15
     temp_df = aux.loc[selected_row_indices, :]
-    if len(selected_row_indices) == 0:
-        return gen_map(aux)
-    return gen_map(temp_df)
-
+    try:
+        if len(selected_row_indices) == 0:
+            return gen_map(aux)
+        return gen_map(temp_df)
+    except KeyError:
+        print("El dispositivo no se encuentra en esa fecha")
 @app.callback(
     Output('datatable', 'rows'),
-    [#Input('type', 'value'),
+    [Input('mydate', 'date'),
+    Input('dropdown', 'value'),
      Input('boroughs', 'values'),
      Input('elslider', 'value') 
     ])
-def update_selected_row_indices(borough, elslider):
+def update_selected_row_indices(date, dropdown, borough, elslider):
     map_aux = map_data.copy()
-
+        #map_aux = map_aux[map_aux['datestr'] == date]
+    map_aux = map_aux[map_aux['datestr'] == date]
+    
+    if ((dropdown == map_aux['deviceId']).any()):
+        map_aux = map_aux[map_aux['deviceId'] == dropdown]
+    else:
+        column_names = ['hora', 'distancia', 'deviceId', 'latitude', 'longitude', 'altitude', 'deviceTime', 'fixTime', 'attributes.totalDistance', 'attributes.batteryLevel', 'date', 'datestr', 'speed', 'partday', 'acum_distance', 'speed_Km', 'hour']
+        map_aux = pd.DataFrame(columns = column_names)
+        print("El dispositivo no reporto en esa fecha")
+    #map_aux[(map_aux['deviceId'] == dropdown) | (map_aux["datestr"] == date)]
+    #if date is not None:
+        #print('Este es date', date)
+        #map_aux = map_aux[map_aux['datestr'] == date]
+    #print('Este es type date', type(date))
+    #map_aux = map_aux[map_aux['strdate'] == fecha]
     # Type filter
     #map_aux = map_aux[map_aux['partday'].isin(type)]
     # Boroughs filter
     map_aux = map_aux[map_aux["partday"].isin(borough)]
-
     #map_aux = map_aux[map_aux["hour"].isin(myslider)]
     print('Este es slider', elslider)
     map_aux = map_aux[map_aux["acum_distance"] <= elslider]
     #print('Estos son los indices', selected_row_indices)
     #if selected_row_indices:
     #    map_aux = map_aux.iloc[selected_row_indices]
+    
     rows = map_aux.to_dict('records')
     return rows
 
 @app.callback(
     Output('datatable', 'selected_row_indices'),
     [Input('graph222', 'selectedData'),
-    Input('distancia_acumulada', 'selectedData')],
+    Input('grafico_distancia', 'selectedData')],
     [State('datatable', 'selected_row_indices')])
 def update_selected_row_indices(selection1,selection2, selected_row_indices):
     if selection1 and selection1['points']:
@@ -592,6 +580,20 @@ def update_selected_row_indices(selection1,selection2, selected_row_indices):
             selected_row_indices.append(point['pointNumber'])
 
     return selected_row_indices
+
+@app.callback(
+    Output('dropdown', 'options'),
+    [Input('mydate', 'date')]
+)
+def update_date_dropdown(date):
+    return [{'label': i, 'value': i} for i in frame[date]]
+
+@app.callback(
+    Output('dropdown', 'value'),
+    [Input('mydate', 'date')]
+)
+def update_date_value(date):
+    return frame[date][0]
 
 
 @app.callback(
@@ -613,13 +615,19 @@ def update_figure(rows, selected_row_indices):
         plot_bgcolor='rgba(0,0,0,0)',
         xaxis=dict(
             #showgrid=False,
+            showspikes= True,
+            spikesnap =  'cursor',
+            spikedash = 'dot',
             #nticks=50,
             #fixedrange=False
             title= 'Tiempo (horas)',        
 
         ),
         yaxis=dict(
-            #showticklabels=True,
+            showticklabels=True,
+            showspikes= True,
+            spikesnap =  'cursor',
+            spikedash = 'dot',
             #showgrid=False,
             #fixedrange=False,
             #rangemode='nonnegative',
@@ -631,13 +639,123 @@ def update_figure(rows, selected_row_indices):
     )
 
     data = Data([
-         go.Scatter(x=dff['deviceTime'], y=dff['distancia'],
-                    mode='lines+markers',
-                    name='lines+markers',
-                    line = dict(color='red', width=2))
-     ])
+    
+        go.Scatter(x=dff['deviceTime'], y=dff['distancia'],
+                        mode='lines+markers',
+                        name='lines+markers',
+                        line = dict(color='red', width=2))
+        ])
 
     return go.Figure(data=data, layout=layout)
+
+
+
+#Grafico Distancia Acumulada
+@app.callback(
+    Output('grafico_distancia', 'figure'),
+    [Input('datatable', 'rows'), 
+     Input('datatable', 'selected_row_indices')])
+def update_figure(rows, selected_row_indices):
+    dff = pd.DataFrame(rows)
+
+    layout = go.Layout(
+        title="Distancia Acumulada en el día",
+        #bargap=0.05,
+        #bargroupgap=0,
+        #barmode='group',
+        #showlegend=False,
+        height=350,
+        dragmode="select",
+        #paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        xaxis=dict(
+            #showgrid=False,
+            showspikes= True,
+            spikesnap =  'cursor',
+            spikedash = 'dot',
+            #nticks=50,
+            #fixedrange=False
+            title= 'Tiempo (horas)',        
+
+        ),
+        yaxis=dict(
+            showticklabels=True,
+            showspikes= True,
+            spikesnap =  'cursor',
+            spikedash = 'dot',
+            #showgrid=False,
+            #fixedrange=False,
+            #rangemode='nonnegative',
+            #zeroline=True
+            title= 'Distancia (Km)',        
+
+    
+        )
+    )
+
+    data = Data([
+    
+        go.Scatter(x=dff['deviceTime'], y=dff['acum_distance'],
+                        mode='lines+markers',
+                        name='lines+markers',
+                        line = dict(color='orange', width=2))
+        ])
+
+    return go.Figure(data=data, layout=layout)
+
+#Grafico Velocidad
+@app.callback(
+    Output('velocidad_detectada', 'figure'),
+    [Input('datatable', 'rows'), 
+     Input('datatable', 'selected_row_indices')])
+def update_figure(rows, selected_row_indices):
+    dff = pd.DataFrame(rows)
+
+    layout = go.Layout(
+        title="Velocidad detectada en el día",
+        #bargap=0.05,
+        #bargroupgap=0,
+        #barmode='group',
+        #showlegend=False,
+        height=350,
+        dragmode="select",
+        #paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        xaxis=dict(
+            #showgrid=False,
+            showspikes= True,
+            spikesnap =  'cursor',
+            spikedash = 'dot',
+            #nticks=50,
+            #fixedrange=False
+            title= 'Tiempo (horas)',        
+
+        ),
+        yaxis=dict(
+            showticklabels=True,
+            showspikes= True,
+            spikesnap =  'cursor',
+            spikedash = 'dot',
+            #showgrid=False,
+            #fixedrange=False,
+            #rangemode='nonnegative',
+            #zeroline=True
+            title= 'Velocidad (Km/h)',        
+
+    
+        )
+    )
+
+    data = Data([
+    
+        go.Scatter(x=dff['deviceTime'], y=dff['speed_Km'],
+                        mode='lines+markers',
+                        name='lines+markers',
+                        line = dict(color='blue', width=2))
+        ])
+
+    return go.Figure(data=data, layout=layout)
+
 
 
 @app.callback(
@@ -805,6 +923,17 @@ def update_output(value):
 #     [dash.dependencies.Input('demo-dropdown', 'value')])
 # def update_output(value):
 #     return 'Has seleccionado "{}"'.format(value)
+
+@app.callback(
+    Output('output-container-date-picker-single', 'children'),
+    [Input('mydate', 'date')])
+def update_output(date):
+    if date is not None:
+        #date = datetime.strptime(re.split('T| ', date)[0], '%Y-%m-%d').date()
+        #date_string = date.strftime('%B %d, %Y')
+        #formatoiso = date.isoformat()
+        #formatoiso =  formatoiso + 'Z'
+        return date
 
 
 if __name__ == "__main__":
