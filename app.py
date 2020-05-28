@@ -29,6 +29,8 @@ help_info = """
     """
 #html.Div([dcc.Graph(id='bar-graph')],className= 'twelve columns'),
 #info = 
+import locale
+locale.setlocale(locale.LC_ALL, 'esp_esp')
 
 USERNAME_PASSWORD_PAIRS = [
     ['vikua', 'kunigo'],
@@ -261,7 +263,7 @@ app.layout = html.Div(
                         'padding-right': 0
                     },
                         ),
-                        html.H2("Usuario: urbo@vikua.com \n Día: 25 de mayo"),
+                        html.H2(id='output-container-date-picker-single'),
                         # html.P(
                         #     """Selecciona el dispositivo a consultar"""
                         # ),                        
@@ -291,7 +293,7 @@ app.layout = html.Div(
                                     initial_visible_month=datetime(2020, 5, 5),
                                     date=str(datetime(2020, 5, 25).date()),
                                 ),
-                                html.Div(id='output-container-date-picker-single')
+                               
                             ]),            
        
 
@@ -437,45 +439,14 @@ app.layout = html.Div(
 
                     ]),
                     dcc.Tab(label='Batería del Dispositivo', value='tab-4', children=[
-                    html.Div([
                         
-                        
-                        dcc.Graph(id='bateria',  style={'height':'45vh'},
-                        figure={
-                            'data': [
-                                go.Scatter(x=map_data['deviceTime'], y=map_data['attributes.batteryLevel'],
-                                            mode='lines+markers',
-                                            name='lines+markers',
-                                            line = dict(color='blue', width=1))
-                            ],
+                        dcc.Graph(id='bateria'),
 
-                        'layout':{
-                            'title' : "Bateria del Dispositivo en el dia",
-                            "dragmode" :"select",
 
-                            'xaxis' : {
-                                'title': 'Hora',
-                                'showspikes': True,
-                                'spikedash': 'dot',
-                                'spikemode': 'across',
-                                'spikesnap': 'cursor',
-                                },
-
-                            'yaxis' : {
-                                'title': 'Nivel de Batería (%)',
-                                'showspikes': True,
-                                'spikedash': 'dot',
-                                'spikemode': 'across',
-                                'spikesnap': 'cursor',
-                                },
-                        },
-                        }
-                        
-                        )],className= 'twelve columns'),
                     ]),
-                    # dcc.Tab(label='Notificaciones', value='tab-5', children=[
+                     dcc.Tab(label='Eventos', value='tab-5', children=[
 
-                    # ]),
+                    ]),
                     ]
                     ),
                     html.Div(id='tabs-example-content')
@@ -756,6 +727,58 @@ def update_figure(rows, selected_row_indices):
 
     return go.Figure(data=data, layout=layout)
 
+#Grafico Bateria
+@app.callback(
+    Output('bateria', 'figure'),
+    [Input('datatable', 'rows'), 
+     Input('datatable', 'selected_row_indices')])
+def update_figure(rows, selected_row_indices):
+    dff = pd.DataFrame(rows)
+
+    layout = go.Layout(
+        title="Batería del dispositivo",
+        #bargap=0.05,
+        #bargroupgap=0,
+        #barmode='group',
+        #showlegend=False,
+        height=350,
+        dragmode="select",
+        #paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        xaxis=dict(
+            #showgrid=False,
+            showspikes= True,
+            spikesnap =  'cursor',
+            spikedash = 'dot',
+            #nticks=50,
+            #fixedrange=False
+            title= 'Tiempo (horas)',        
+
+        ),
+        yaxis=dict(
+            showticklabels=True,
+            showspikes= True,
+            spikesnap =  'cursor',
+            spikedash = 'dot',
+            #showgrid=False,
+            #fixedrange=False,
+            #rangemode='nonnegative',
+            #zeroline=True
+            title= 'Porcentaje batería (%)',        
+
+    
+        )
+    )
+
+    data = Data([
+    
+        go.Scatter(x=dff['deviceTime'], y=dff['attributes.batteryLevel'],
+                        mode='lines+markers',
+                        name='lines+markers',
+                        line = dict(color='red', width=2))
+        ])
+
+    return go.Figure(data=data, layout=layout)
 
 
 @app.callback(
@@ -764,176 +787,17 @@ def update_figure(rows, selected_row_indices):
 def update_output(value):
     return 'Has seleccionado {:.2f} Km acumulados en el día'.format(value)
 
-# @app.callback(Output('tabs-example-content', 'children'),
-#               [Input('tabs-example', 'value') Input('datatable', 'rows'), Input('datatable', 'selected_row_indices')])
-              
-# def render_content(tab, rows, selected_row_indices, figure):
-#     dff = pd.DataFrame(rows)
-#     if tab == 'tab-1':
-#         return html.Div([
 
-#             dcc.Graph(id='distancia', style={'height':'45vh'},
-#             figure={
-#                 'data': [
-#                     go.Scatter(x=dff['deviceTime'], y=dff['distancia'],
-#                                 mode='lines+markers',
-#                                 name='lines+markers',
-#                                 line = dict(color='blue', width=1))
-#                 ],
-
-#             'layout':{
-#                 'title' : "Distancia Recorrida en el dia",
-#                 'xaxis' : {
-#                     'title': 'Tiempo (horas) ',
-#                     'showspikes': True,
-#                     'spikedash': 'dot',
-#                     'spikemode': 'across',
-#                     'spikesnap': 'cursor',
-#                     'dragmode' : "select",
-#                     },
-
-#                 'yaxis' : {
-#                     'title': 'Distancia (metros)',
-#                     'showspikes': True,
-#                     'spikedash': 'dot',
-#                     'spikemode': 'across',
-#                     'spikesnap': 'cursor',
-#                     },
-#             },
-#             }
-            
-#             )],className= 'twelve columns'),
-      
-#     elif tab == 'tab-2':
-#         return html.Div([
-            
-            
-#             dcc.Graph(id='distancia_acumulada',  style={'height':'45vh'},
-#             figure={
-#                 'data': [
-#                     go.Scatter(x=dff['deviceTime'], y=dff['acum_distance'],
-#                                 mode='lines+markers',
-#                                 name='lines+markers',
-#                                 line = dict(color='orange', width=1))
-#                 ],
-
-#             'layout':{
-#                 'title' : "Distancia Acumulada en el dia",
-
-
-#                 'xaxis' : {
-#                     'title': 'Tiempo (horas)',
-#                     'showspikes': True,
-#                     'spikedash': 'dot',
-#                     'spikemode': 'across',
-#                     'spikesnap': 'cursor',
-#                     },
-
-#                 'yaxis' : {
-#                     'title': 'Distancia Acumulada (metros)',
-#                     'showspikes': True,
-#                     'spikedash': 'dot',
-#                     'spikemode': 'across',
-#                     'spikesnap': 'cursor',
-#                     },
-#             },
-#             }
-            
-#             )],className= 'twelve columns'),
-
-#     elif tab == 'tab-3':
-#         return html.Div([
-            
-            
-#             dcc.Graph(id='distancia_acumulada',  style={'height':'45vh'},
-#             figure={
-#                 'data': [
-#                     go.Scatter(x=dff['deviceTime'], y=dff['speed_Km'],
-#                                 mode='lines+markers',
-#                                 name='lines+markers',
-#                                 line = dict(color='blue', width=1))
-#                 ],
-
-#             'layout':{
-#                 'title' : "Velocidad detectada en el dia",
-
-
-#                 'xaxis' : {
-#                     'title': 'Hora',
-#                     'showspikes': True,
-#                     'spikedash': 'dot',
-#                     'spikemode': 'across',
-#                     'spikesnap': 'cursor',
-#                     },
-
-#                 'yaxis' : {
-#                     'title': 'Velocidad (Km/h)',
-#                     'showspikes': True,
-#                     'spikedash': 'dot',
-#                     'spikemode': 'across',
-#                     'spikesnap': 'cursor',
-#                     },
-#             },
-#             }
-            
-#             )],className= 'twelve columns'),
-
-#     elif tab == 'tab-4':
-#         return html.Div([
-            
-            
-#             dcc.Graph(id='distancia_acumulada',  style={'height':'45vh'},
-#             figure={
-#                 'data': [
-#                     go.Scatter(x=dff['deviceTime'], y=dff['attributes.batteryLevel'],
-#                                 mode='lines+markers',
-#                                 name='lines+markers',
-#                                 line = dict(color='blue', width=1))
-#                 ],
-
-#             'layout':{
-#                 'title' : "Bateria del Dispositivo en el dia",
-
-
-#                 'xaxis' : {
-#                     'title': 'Hora',
-#                     'showspikes': True,
-#                     'spikedash': 'dot',
-#                     'spikemode': 'across',
-#                     'spikesnap': 'cursor',
-#                     },
-
-#                 'yaxis' : {
-#                     'title': 'Nivel de Batería (%)',
-#                     'showspikes': True,
-#                     'spikedash': 'dot',
-#                     'spikemode': 'across',
-#                     'spikesnap': 'cursor',
-#                     },
-#             },
-#             }
-            
-#             )],className= 'twelve columns'),
-#     elif tab == 'tab-5':
-#         return  html.Div([dcc.Graph(id='graph222')]) 
-
-
-# @app.callback(
-#     dash.dependencies.Output('dd-output-container', 'children'),
-#     [dash.dependencies.Input('demo-dropdown', 'value')])
-# def update_output(value):
-#     return 'Has seleccionado "{}"'.format(value)
 
 @app.callback(
     Output('output-container-date-picker-single', 'children'),
     [Input('mydate', 'date')])
 def update_output(date):
     if date is not None:
-        #date = datetime.strptime(re.split('T| ', date)[0], '%Y-%m-%d').date()
-        #date_string = date.strftime('%B %d, %Y')
-        #formatoiso = date.isoformat()
-        #formatoiso =  formatoiso + 'Z'
-        return date
+        date = datetime.strptime(re.split('T| ', date)[0], '%Y-%m-%d')
+        date_string = date.strftime('%B %d, %Y')
+        texto = "Usuario: urbo@vikua.com \n Día: " + date_string
+        return texto
 
 
 if __name__ == "__main__":
