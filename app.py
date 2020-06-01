@@ -11,7 +11,6 @@ from datetime import time
 from dash.dependencies import Input, Output, State, Event
 from plotly import graph_objs as go
 from plotly.graph_objs import *
-#from datetime import datetime as dt
 from pandas.io.json import json_normalize
 from datos import create_df
 from datetime import datetime
@@ -21,21 +20,16 @@ import flask
 
 import requests
 import io
-help_info = """
-     # [GOI official Information Portal](https://www.mygov.in/covid-19)
-    # [World Health Organization](https://www.who.int/emergencies/diseases/novel-coronavirus-2019)
-    # [Ministry of Health and Family Welfare | GOI](https://www.mohfw.gov.in/)
-    # [Government Laboratories Approved by ICMR](https://icmr.nic.in/sites/default/files/upload_documents/Final_Government_Laboratories_Testing_2303.pdf)
-    """
-#html.Div([dcc.Graph(id='bar-graph')],className= 'twelve columns'),
-#info = 
-import locale
-locale.setlocale(locale.LC_ALL, 'esp_esp')
+
+#import locale
+#locale.setlocale(locale.LC_ALL, 'esp_esp')
 
 USERNAME_PASSWORD_PAIRS = [
     ['vikua', 'kunigo'],
     ['Juan Andres', '12356']
 ]
+
+
 #print(USERNAME_PASSWORD_PAIRS)
 
 
@@ -59,15 +53,7 @@ server = app.server
 
 
 
-map_data, frame = create_df()
-# df_distance = pd.read_csv("distances_dash.csv")
-# df_distance = df_distance[['time', 'attributes.distance', 'latitude', 'longitude', 'altitude', 'deviceTime', 'fixTime', 'attributes.totalDistance', 'attributes.batteryLevel', 'speed', 'partday']]
-# df_distance['acum_distance'] = df_distance['attributes.distance'].cumsum() 
-# df_distance['speed_Km'] = df_distance['speed']*1.852
-# df_distance.rename(columns={'time':'hora', 'attributes.distance':'distancia'}, inplace=True)
-# df_distance['horita'] = pd.to_datetime(df_distance['hora'], format='%H:%M:%S')
-# df_distance['hour'] = df_distance['horita'].dt.hour
-
+map_data, df_events, df_trips, frame = create_df()
 #map_data = df_distance
 
 print('Este es el frame', frame)
@@ -75,7 +61,7 @@ print('Este es el frame', frame)
 #  Layouts
 layout_table = dict(
     autosize=False,
-    height=600,
+    height=500,
     font=dict(color="#191A1A"),
     titlefont=dict(color="#191A1A", size='14'),
     # margin=dict(
@@ -264,21 +250,6 @@ app.layout = html.Div(
                     },
                         ),
                         html.H2(id='output-container-date-picker-single'),
-                        # html.P(
-                        #     """Selecciona el dispositivo a consultar"""
-                        # ),                        
-                        # html.Div(
-                        #     className="div-for-dropdown",
-                        #             children=[
-                        #                 # Dropdown for locations on map
-                        # dcc.Dropdown(
-                        #     id='type',
-                        #     options= [{'label': str(item), 'value': str(item)} for item in set(map_data['partday'])],
-                        #     multi=True,
-                        #     value=list(set(map_data['partday']))
-                        # )
-                        # ],
-                        # ),
 
                         html.P(
                             'Selecciona el día:'
@@ -334,30 +305,6 @@ app.layout = html.Div(
                             """Selecciona la distancia de km recorrido en el día """
                         ), 
 
-                        # html.Div(
-                        #     className="div-for-dropdown",
-                        #     children=[
-                        # dcc.RangeSlider(
-                        #         id='myslider',
-                        #         min=0,
-                        #         max=23,
-                        #         #marks={i : {'label' : "{}".format(i+1), 'style':{ 'font-size':'8px'}} for i in range(0, 23) if i %5 ==0},
-                        #         marks={
-                        #         0: {'label': '12 AM', 'style': { 'font-size':'10px'}},
-                        #         3: {'label': '3 AM', 'style': { 'font-size':'10px'}},
-                        #         6: {'label': '6 AM',  'style': { 'font-size':'10px'}},
-                        #         9: {'label': '9 PM',  'style': { 'font-size':'10px'}},
-                        #         12: {'label': '12 PM', 'style': { 'font-size':'10px'}},
-                        #         15: {'label': '3 PM',  'style': { 'font-size':'10px'}},
-                        #         18: {'label': '6 PM', 'style': { 'font-size':'10px'}},
-                        #         21: {'label': '9 PM',  'style': { 'font-size':'10px'}},
-                        #         },
-                        #         value=[0, 23],
-                        #         allowCross=False,
-                        #     ),
-                        #         #html.Div(id='sliderhoras'), 
-                        #     ],
-                        # ),
 
                         html.Div([
                             dcc.Slider(
@@ -372,30 +319,28 @@ app.layout = html.Div(
 
                         
                         #html.H2("Tabla"),
-                        html.P(
-                            """Selecciona las filas que quieres ver en el mapa """
-                        ),
+                        # html.P(
+                        #     """Selecciona las filas que quieres ver en el mapa """
+                        # ),
                         
-                        
-                        # Change to side-by-side for mobile layout
                         html.Div(
                             className="row",
                             children=[
-                                html.Div(
-                                    #className="div-for-dropdown",
-                                    children=[
-                                        # Dropdown for locations on map
-                                        dt.DataTable(
-                                        rows=map_data.to_dict('records'),
-                                        columns=map_data.columns[0:2],
-                                        row_selectable=True,
-                                        #filterable=True,
-                                        sortable=True,
-                                        min_height=250,
-                                        selected_row_indices=[],
-                                        id='datatable'),
-                                    ],
-                                ),
+                                # html.Div(
+                                #     #className="div-for-dropdown",
+                                #     children=[
+                                #         # Dropdown for locations on map
+                                #         dt.DataTable(
+                                #         rows=map_data.to_dict('records'),
+                                #         columns=map_data.columns[0:2],
+                                #         row_selectable=True,
+                                #         #filterable=True,
+                                #         sortable=True,
+                                #         min_height=250,
+                                #         selected_row_indices=[],
+                                #         id='datatable'),
+                                #     ],
+                                # ),
                                 html.Div(
                                     #className="div-for-dropdown",
                                     children=[
@@ -445,8 +390,28 @@ app.layout = html.Div(
 
                     ]),
                      dcc.Tab(label='Eventos', value='tab-5', children=[
-
+                                        dt.DataTable(
+                                        rows=map_data.to_dict('records'),
+                                        columns=map_data.columns[0:2],
+                                        row_selectable=True,
+                                        #filterable=True,
+                                        sortable=True,
+                                        min_height=250,
+                                        selected_row_indices=[],
+                                        id='datatable'),
                     ]),
+                     dcc.Tab(label='Viajes', value='tab-6', children=[
+                                        dt.DataTable(
+                                        rows=df_trips.to_dict('records'),
+                                        columns=df_trips.columns,
+                                        row_selectable=True,
+                                        #filterable=True,
+                                        sortable=True,
+                                        min_height=250,
+                                        selected_row_indices=[],
+                                        id='datatable_trips'),
+                    ]),
+                
                     ]
                     ),
                     html.Div(id='tabs-example-content')
@@ -491,12 +456,10 @@ def map_selection(rows, dropdown, selected_row_indices):
     # else:
     #     zoom = 15
     temp_df = aux.loc[selected_row_indices, :]
-    try:
-        if len(selected_row_indices) == 0:
-            return gen_map(aux)
-        return gen_map(temp_df)
-    except KeyError:
-        print("El dispositivo no se encuentra en esa fecha")
+    if len(selected_row_indices) == 0:
+        return gen_map(aux)
+    return gen_map(temp_df)
+
 @app.callback(
     Output('datatable', 'rows'),
     [Input('mydate', 'date'),
@@ -507,14 +470,16 @@ def map_selection(rows, dropdown, selected_row_indices):
 def update_selected_row_indices(date, dropdown, borough, elslider):
     map_aux = map_data.copy()
         #map_aux = map_aux[map_aux['datestr'] == date]
-    map_aux = map_aux[map_aux['datestr'] == date]
+    if not map_aux[map_aux['datestr'] == date].empty:
+        map_aux = map_aux[map_aux['datestr'] == date]
+    else:
+        print('Fecha no existente', date)
     
-    if ((dropdown == map_aux['deviceId']).any()):
+    if not map_aux[map_aux['deviceId'] == dropdown].empty:
         map_aux = map_aux[map_aux['deviceId'] == dropdown]
     else:
-        column_names = ['hora', 'distancia', 'deviceId', 'latitude', 'longitude', 'altitude', 'deviceTime', 'fixTime', 'attributes.totalDistance', 'attributes.batteryLevel', 'date', 'datestr', 'speed', 'partday', 'acum_distance', 'speed_Km', 'hour']
-        map_aux = pd.DataFrame(columns = column_names)
-        print("El dispositivo no reporto en esa fecha")
+        print('Ese device ID no existe', dropdown)
+
     #map_aux[(map_aux['deviceId'] == dropdown) | (map_aux["datestr"] == date)]
     #if date is not None:
         #print('Este es date', date)
@@ -524,15 +489,33 @@ def update_selected_row_indices(date, dropdown, borough, elslider):
     # Type filter
     #map_aux = map_aux[map_aux['partday'].isin(type)]
     # Boroughs filter
-    map_aux = map_aux[map_aux["partday"].isin(borough)]
+    #if ((borough == map_aux['partday']).any()):
+    if not map_aux[map_aux['partday'].isin(borough)].empty:
+        map_aux = map_aux[map_aux["partday"].isin(borough)]
+    else:
+        print('Rango fuera de hora', borough)
+    #else:
     #map_aux = map_aux[map_aux["hour"].isin(myslider)]
     print('Este es slider', elslider)
     map_aux = map_aux[map_aux["acum_distance"] <= elslider]
-    #print('Estos son los indices', selected_row_indices)
     #if selected_row_indices:
     #    map_aux = map_aux.iloc[selected_row_indices]
     
     rows = map_aux.to_dict('records')
+    return rows
+
+
+
+@app.callback(
+    Output('datatable_trips', 'rows'),
+    [Input('dropdown', 'value'),
+    Input('mydate', 'date'),
+    ])
+def update_selected_row_indices(dropdown, date):
+    trips_aux = df_trips.copy()
+    trips_aux = trips_aux[trips_aux['deviceId'] == dropdown]
+    trips_aux = trips_aux[trips_aux['strdate'] == date]
+    rows = trips_aux.to_dict('records')
     return rows
 
 @app.callback(
