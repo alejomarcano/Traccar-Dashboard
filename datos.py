@@ -6,6 +6,7 @@ from datetime import time
 import json
 import sys
 import requests
+
 def calcular_fecha(hora):
     hoy = datetime.datetime.combine(datetime.datetime.now().date(), datetime.time(hora,0,0))
     hoy = hoy.isoformat()
@@ -142,3 +143,6 @@ def create_df():
     df_trips["strdate"] = strdate
     df_trips = df_trips[['deviceId', 'startTime', 'endTime', 'distance', 'strdate']]
     return df_distance, df_events, df_trips, frame
+
+
+df_distance, df_events, df_trips, frame = create_df()
