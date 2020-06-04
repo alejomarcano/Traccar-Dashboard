@@ -29,65 +29,128 @@ USERNAME_PASSWORD_PAIRS = [
     ['Juan Andres', '12356']
 ]
 
-ready = [{'type': 'Polygon',
-  'coordinates': (((-78.47814652712178, -0.17952581098751352),
-    (-78.47797293860246, -0.17951192392115445),
-    (-78.47797293860246, -0.1799077038513417),
-    (-78.47657728701314, -0.18035208810573522),
-    (-78.47669532699439, -0.181206139581505),
-    (-78.4769175200872, -0.1811575349861272),
-    (-78.47688974634791, -0.1809700607981597),
-    (-78.47829234137205, -0.18079647314390002),
-    (-78.47814652712178, -0.17952581098751352)),)},
- {'type': 'Polygon',
-  'coordinates': (((-66.85435711164946, 10.485466106518729),
-    (-66.85453150643635, 10.483137544749098),
-    (-66.85228273155288, 10.483038264594498),
-    (-66.85146582965643, 10.48513216656545),
-    (-66.85435711164946, 10.485466106518729)),)},
- {'type': 'Polygon',
-  'coordinates': (((-78.49208480885643, -0.18486465450376954),
-    (-78.49236546381688, -0.1858371515104409),
-    (-78.49134727364681, -0.18614391264600272),
-    (-78.49097524228796, -0.1847406446958786),
-    (-78.4919607984035, -0.1845056790300248),
-    (-78.49208480885643, -0.18486465450376954)),)},
- {'type': 'Polygon',
-  'coordinates': (((-66.79965329548395, 10.487324156298932),
-    (-66.79977233781416, 10.48840060603183),
-    (-66.80012393549933, 10.489426725657143),
-    (-66.80069165017017, 10.490354534234218),
-    (-66.80144893726603, 10.491140647402812),
-    (-66.80236038701703, 10.491748306183974),
-    (-66.8033833801408, 10.49214909601106),
-    (-66.8044700808399, 10.49232427556995),
-    (-66.80556967387912, 10.492265653275052),
-    (-66.80663074107785, 10.491975970369783),
-    (-66.80760366601703, 10.491468772725037),
-    (-66.80844295443528, 10.49076777733458),
-    (-66.80910936174371, 10.489905763150677),
-    (-66.80957172813235, 10.488923038157226),
-    (-66.80980843544681, 10.487865554399018),
-    (-66.8098084177363, 10.486782759145825),
-    (-66.80957167827458, 10.485725282699843),
-    (-66.80910928895487, 10.484742570979186),
-    (-66.8084428721703, 10.483880573575181),
-    (-66.80760358948254, 10.483179595369974),
-    (-66.80663068442118, 10.482672412139149),
-    (-66.80556964757321, 10.482382738212076),
-    (-66.80447008974738, 10.482324117800033),
-    (-66.80338342261511, 10.482499291798396),
-    (-66.80236045520685, 10.482900069649432),
-    (-66.80144901856652, 10.483507712252777),
-    (-66.800691729553, 10.484293808032252),
-    (-66.80012399829066, 10.485221601223262),
-    (-66.79977237240706, 10.486247710309675),
-    (-66.79965329548395, 10.487324156298932)),)}]
+ready = []
+
+# ready = [{'type': 'Polygon',
+#   'coordinates': (((-74.78515943350743, 10.957642599149807),
+#     (-74.77453580192436, 10.949660396095908),
+#     (-74.77941399858116, 10.938378513120412),
+#     (-74.78147368326816, 10.934440400352557),
+#     (-74.78483421708874, 10.947212478190906),
+#     (-74.78624347720896, 10.954343316273722),
+#     (-74.79892678520844, 10.958387594597298),
+#     (-74.80066125347673, 10.960728994909601),
+#     (-74.79556625138785, 10.962538246280204),
+#     (-74.78515943350743, 10.957642599149807)),)},
+#  {'type': 'Polygon',
+#   'coordinates': (((-74.80896298725673, 10.986620313619142),
+#     (-74.7981563042545, 10.981057205891176),
+#     (-74.80514110812751, 10.971353858493714),
+#     (-74.81291665324116, 10.971483236580994),
+#     (-74.81726568984591, 10.975882126941713),
+#     (-74.81423454190262, 10.980539700102767),
+#     (-74.80606362616868, 10.976399635955616),
+#     (-74.80369142255614, 10.979763444654978),
+#     (-74.81067623648384, 10.98351533366153),
+#     (-74.80896298725673, 10.986620313619142)),)},
+#  {'type': 'Polygon',
+#   'coordinates': (((-74.77950564484186, 10.973733361659946),
+#     (-74.77967889360004, 10.975297579095963),
+#     (-74.78019062088649, 10.976788663173153),
+#     (-74.78101690321765, 10.978136890848484),
+#     (-74.78211910709062, 10.979279218144471),
+#     (-74.78344569497267, 10.980162228449881),
+#     (-74.78493463508391, 10.98074463071232),
+#     (-74.78651630230489, 10.980999190619164),
+#     (-74.78811673449727, 10.9809140043823),
+#     (-74.78966109184147, 10.980493055503239),
+#     (-74.79107715726003, 10.97975602845578),
+#     (-74.79229871406692, 10.978737388008058),
+#     (-74.79326864274826, 10.977484767280885),
+#     (-74.79394159196893, 10.97605673999037),
+#     (-74.79428609888154, 10.974520081132168),
+#     (-74.79428605964475, 10.97294664428234),
+#     (-74.79394148151147, 10.971410001597981),
+#     (-74.79326848148808, 10.969982003665432),
+#     (-74.7922985318128, 10.968729420053554),
+#     (-74.79107698770154, 10.967710817617725),
+#     (-74.78966096632135, 10.966973822452285),
+#     (-74.7881166762178, 10.966552893432013),
+#     (-74.78651632203895, 10.966467711359819),
+#     (-74.78493472918373, 10.966722258967383),
+#     (-74.78344584604395, 10.967304634740104),
+#     (-74.78211928720795, 10.968187609261957),
+#     (-74.78101707908651, 10.969329898095113),
+#     (-74.78019075999767, 10.970678091738156),
+#     (-74.77967897023895, 10.972169152504444),
+#     (-74.77950564484186, 10.973733361659946)),)},
+#  {'type': 'Polygon',
+#   'coordinates': (((-74.77950564484186, 10.973733361659946),
+#     (-74.77967889360004, 10.975297579095963),
+#     (-74.78019062088649, 10.976788663173153),
+#     (-74.78101690321765, 10.978136890848484),
+#     (-74.78211910709062, 10.979279218144471),
+#     (-74.78344569497267, 10.980162228449881),
+#     (-74.78493463508391, 10.98074463071232),
+#     (-74.78651630230489, 10.980999190619164),
+#     (-74.78811673449727, 10.9809140043823),
+#     (-74.78966109184147, 10.980493055503239),
+#     (-74.79107715726003, 10.97975602845578),
+#     (-74.79229871406692, 10.978737388008058),
+#     (-74.79326864274826, 10.977484767280885),
+#     (-74.79394159196893, 10.97605673999037),
+#     (-74.79428609888154, 10.974520081132168),
+#     (-74.79428605964475, 10.97294664428234),
+#     (-74.79394148151147, 10.971410001597981),
+#     (-74.79326848148808, 10.969982003665432),
+#     (-74.7922985318128, 10.968729420053554),
+#     (-74.79107698770154, 10.967710817617725),
+#     (-74.78966096632135, 10.966973822452285),
+#     (-74.7881166762178, 10.966552893432013),
+#     (-74.78651632203895, 10.966467711359819),
+#     (-74.78493472918373, 10.966722258967383),
+#     (-74.78344584604395, 10.967304634740104),
+#     (-74.78211928720795, 10.968187609261957),
+#     (-74.78101707908651, 10.969329898095113),
+#     (-74.78019075999767, 10.970678091738156),
+#     (-74.77967897023895, 10.972169152504444),
+#     (-74.77950564484186, 10.973733361659946)),)},
+#  {'type': 'Polygon',
+#   'coordinates': (((-74.79364984292619, 10.99813418814024),
+#     (-74.79385682448891, 11.000002898264741),
+#     (-74.79446820815923, 11.001784240609934),
+#     (-74.79545541249064, 11.003394919286437),
+#     (-74.79677228054103, 11.004759617388105),
+#     (-74.79835723744705, 11.005814519348217),
+#     (-74.80013616951727, 11.00651029558724),
+#     (-74.80202589023598, 11.006814409763296),
+#     (-74.80393803101319, 11.006712640619742),
+#     (-74.80578317456111, 11.006209747180302),
+#     (-74.8074750373734, 11.005329246146223),
+#     (-74.80893450547494, 11.004112311918258),
+#     (-74.81009333450768, 11.002615850744535),
+#     (-74.81089734099187, 11.000909839152888),
+#     (-74.81130893550029, 10.999074051248266),
+#     (-74.81130887936872, 10.997194328028492),
+#     (-74.81089718297304, 10.99535856326002),
+#     (-74.81009310381123, 10.993652593663976),
+#     (-74.8089342447449, 10.992156185582457),
+#     (-74.80747479480553, 10.99093930572925),
+#     (-74.80578299499386, 10.990058850301349),
+#     (-74.80393794763943, 10.98955598526925),
+#     (-74.80202591846725, 10.989454222083122),
+#     (-74.80013630413507, 10.98975831866546),
+#     (-74.79835745356739, 10.990454057011815),
+#     (-74.79677253821423, 10.991508907784732),
+#     (-74.79545566408603, 10.992873550866587),
+#     (-74.79446840716962, 10.994484180861027),
+#     (-74.7938569341274, 10.996265489860743),
+#     (-74.79364984292619, 10.99813418814024)),)}]
 
 
 vector_poligonos = []           
 for i in range(0, len(ready)):
-    vector_poligonos.append(dict(source = dict(type = 'FeatureCollection',features = [dict(geometry = ready[i])],),type = 'fill',bellow = 'traces',color = 'orange', opacity = 0.5))
+    vector_poligonos.append(dict(source = dict(type = 'FeatureCollection',features = [dict(geometry = ready[i])],),type = 'fill',bellow = 'traces',color = 'blue', opacity = 0.5))
 
 #print(vector_poligonos)
 # Plotly mapbox public token
@@ -318,9 +381,9 @@ app.layout = html.Div(
                                 dcc.DatePickerSingle(
                                     id='mydate',
                                     min_date_allowed=datetime(2020, 5, 1),
-                                    max_date_allowed=datetime(2020, 5, 30),
-                                    initial_visible_month=datetime(2020, 5, 5),
-                                    date=str(datetime(2020, 5, 25).date()),
+                                    max_date_allowed=datetime(2020, 6, 30),
+                                    initial_visible_month=datetime(2020, 6, 1),
+                                    date=str(datetime(2020, 6, 2).date()),
                                 ),
                                
                             ]),            
@@ -359,21 +422,21 @@ app.layout = html.Div(
                         ),
                             ],
                         ),
-                        html.P(
-                            """Selecciona la distancia de km recorrido en el día """
-                        ), 
+                        # html.P(
+                        #     """Selecciona la distancia de km recorrido en el día """
+                        # ), 
 
 
-                        html.Div([
-                            dcc.Slider(
-                                id='elslider',
-                                min=0,
-                                max= map_data['acum_distance'].max(),
-                                step=0.1,
-                                value=map_data['acum_distance'].max(),
-                            ),
-                            html.Div(id='slider-output-container')
-                        ]),
+                        # html.Div([
+                        #     dcc.Slider(
+                        #         id='elslider',
+                        #         min=0,
+                        #         max= map_data['acum_distance'].max(),
+                        #         step=0.1,
+                        #         value=map_data['acum_distance'].max(),
+                        #     ),
+                        #     html.Div(id='slider-output-container')
+                        # ]),
 
                         
                         #html.H2("Tabla"),
@@ -447,7 +510,13 @@ app.layout = html.Div(
 
 
                     ]),
-                     dcc.Tab(label='Eventos', value='tab-5', children=[
+                    dcc.Tab(label='Conexión', value='tab-5', children=[
+                        
+                        dcc.Graph(id='activo'),
+
+
+                    ]),
+                     dcc.Tab(label='Puntos donde Reporto', value='tab-6', children=[
                                         dt.DataTable(
                                         rows=map_data.to_dict('records'),
                                         columns=map_data.columns[0:2],
@@ -458,16 +527,16 @@ app.layout = html.Div(
                                         selected_row_indices=[],
                                         id='datatable'),
                     ]),
-                     dcc.Tab(label='Viajes', value='tab-6', children=[
+                     dcc.Tab(label='Eventos', value='tab-7', children=[
                                         dt.DataTable(
-                                        rows=df_trips.to_dict('records'),
-                                        columns=df_trips.columns,
-                                        row_selectable=True,
-                                        #filterable=True,
+                                        rows=df_events.to_dict('records'),
+                                        columns=df_events.columns[0:4],
+                                        #row_selectable=True,
+                                        filterable=True,
                                         sortable=True,
                                         min_height=250,
                                         selected_row_indices=[],
-                                        id='datatable_trips'),
+                                        id='datatable_events'),
                     ]),
                 
                     ]
@@ -523,13 +592,18 @@ def map_selection(rows, dropdown, selected_row_indices):
     [Input('mydate', 'date'),
     Input('dropdown', 'value'),
      Input('boroughs', 'values'),
-     Input('elslider', 'value') 
+     #Input('elslider', 'value') 
     ])
-def update_selected_row_indices(date, dropdown, borough, elslider):
+def update_selected_row_indices(date, dropdown, borough):
     map_aux = map_data.copy()
+    events_aux = df_events.copy()
         #map_aux = map_aux[map_aux['datestr'] == date]
-    if not map_aux[map_aux['datestr'] == date].empty:
-        map_aux = map_aux[map_aux['datestr'] == date]
+    if (map_aux['strdate'] == date).any():
+        print('Fecha fuera de rango')
+
+    print('Esta es date seleccionadado', date)
+    if not map_aux[map_aux['strdate'] == date].empty:
+        map_aux = map_aux[map_aux['strdate'] == date]
     else:
         print('Fecha no existente', date)
     
@@ -537,6 +611,8 @@ def update_selected_row_indices(date, dropdown, borough, elslider):
         map_aux = map_aux[map_aux['deviceId'] == dropdown]
     else:
         print('Ese device ID no existe', dropdown)
+
+ 
 
     #map_aux[(map_aux['deviceId'] == dropdown) | (map_aux["datestr"] == date)]
     #if date is not None:
@@ -554,27 +630,57 @@ def update_selected_row_indices(date, dropdown, borough, elslider):
         print('Rango fuera de hora', borough)
     #else:
     #map_aux = map_aux[map_aux["hour"].isin(myslider)]
-    print('Este es slider', elslider)
-    map_aux = map_aux[map_aux["acum_distance"] <= elslider]
+    #print('Este es slider', elslider)
+    #map_aux = map_aux[map_aux["acum_distance"] <= elslider]
+
+
+
     #if selected_row_indices:
     #    map_aux = map_aux.iloc[selected_row_indices]
     
     rows = map_aux.to_dict('records')
     return rows
 
-
-
 @app.callback(
-    Output('datatable_trips', 'rows'),
-    [Input('dropdown', 'value'),
-    Input('mydate', 'date'),
+    Output('datatable_events', 'rows'),
+    [Input('mydate', 'date'),
+    Input('dropdown', 'value'),
+     Input('boroughs', 'values'),
+     #Input('elslider', 'value') 
     ])
-def update_selected_row_indices(dropdown, date):
-    trips_aux = df_trips.copy()
-    trips_aux = trips_aux[trips_aux['deviceId'] == dropdown]
-    trips_aux = trips_aux[trips_aux['strdate'] == date]
-    rows = trips_aux.to_dict('records')
+def update_selected_row_indices_events_aux(date, dropdown, borough):
+    events_aux = df_events.copy()
+    #print('Lalalala', date)
+    #Dataframe events
+    if (events_aux['dia'] == date).any():
+        print('Fecha fuera de rango')
+
+    print('Esta es date seleccionadado', date)
+    if not events_aux[events_aux['dia'] == date].empty:
+        events_aux = events_aux[events_aux['dia'] == date]
+    else:
+        print('Fecha no existente', date)
+    
+    if not events_aux[events_aux['dispositivo'] == dropdown].empty:
+        events_aux = events_aux[events_aux['dispositivo'] == dropdown]
+    else:
+        print('Ese device ID no existe', dropdown)    
+
+
+    rows = events_aux.to_dict('records')
     return rows
+
+# @app.callback(
+#     Output('datatable_trips', 'rows'),
+#     [Input('dropdown', 'value'),
+#     Input('mydate', 'date'),
+#     ])
+# def update_selected_row_indices(dropdown, date):
+#     trips_aux = df_trips.copy()
+#     trips_aux = trips_aux[trips_aux['deviceId'] == dropdown]
+#     trips_aux = trips_aux[trips_aux['strdate'] == date]
+#     rows = trips_aux.to_dict('records')
+#     return rows
 
 @app.callback(
     Output('datatable', 'selected_row_indices'),
@@ -822,11 +928,70 @@ def update_figure(rows, selected_row_indices):
     return go.Figure(data=data, layout=layout)
 
 
+
+
+#Grafico Conexion
 @app.callback(
-    dash.dependencies.Output('slider-output-container', 'children'),
-    [dash.dependencies.Input('elslider', 'value')])
-def update_output(value):
-    return 'Has seleccionado {:.2f} Km acumulados en el día'.format(value)
+    Output('activo', 'figure'),
+    [Input('datatable_events', 'rows'), 
+     Input('datatable_events', 'selected_row_indices')])
+def update_figure(rows, selected_row_indices):
+    dff = pd.DataFrame(rows)
+    dff = dff[(dff['tipo de evento'] == 'En línea') | (dff['tipo de evento'] == 'Sin Conexión') ]
+    layout = go.Layout(
+        title="Conexión",
+        #bargap=0.05,
+        #bargroupgap=0,
+        #barmode='group',
+        #showlegend=False,
+        height=350,
+        dragmode="select",
+        #paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        xaxis=dict(
+            #showgrid=False,
+            showspikes= True,
+            spikesnap =  'cursor',
+            spikedash = 'dot',
+            #nticks=50,
+            #fixedrange=False
+            title= 'Tiempo (horas)',        
+
+        ),
+        yaxis=dict(
+            showticklabels=True,
+            showspikes= True,
+            spikesnap =  'cursor',
+            spikedash = 'dot',
+            #showgrid=False,
+            #fixedrange=False,
+            #rangemode='nonnegative',
+            #zeroline=True    
+
+    
+        )
+    )
+
+    data = Data([
+        go.Scatter(x=dff['serverTime'], y=dff['tipo de evento'], name="linear", mode='markers+lines', line = {"shape": 'hv', "color": "red"})
+        # go.Scatter(x=dff['serverTime'], y=dff['typenumber'],
+        #                 mode='lines+markers',
+        #                 name='lines+markers',
+        #                 line_shape='vh',
+        #                 line = dict(color='red', width=2))
+         ])
+    return go.Figure(data=data, layout=layout)
+
+
+
+
+
+
+# @app.callback(
+#     dash.dependencies.Output('slider-output-container', 'children'),
+#     [dash.dependencies.Input('elslider', 'value')])
+# def update_output(value):
+#     return 'Has seleccionado {:.2f} Km acumulados en el día'.format(value)
 
 
 
@@ -837,9 +1002,9 @@ def update_output(date):
     if date is not None:
         date = datetime.strptime(re.split('T| ', date)[0], '%Y-%m-%d')
         date_string = date.strftime('%B %d, %Y')
-        texto = "Usuario: urbo@vikua.com \n Día: " + date_string
+        texto = "Usuario: barranquilla@vikua.com \n Día: " + date_string
         return texto
 
 
 if __name__ == "__main__":
-    app.run_server()
+    app.run_server(debug=True)
