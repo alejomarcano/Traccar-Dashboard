@@ -12,7 +12,7 @@ from dash.dependencies import Input, Output, State, Event
 from plotly import graph_objs as go
 from plotly.graph_objs import *
 from pandas.io.json import json_normalize
-from datos import create_df
+from datos import create_df, calcular_ayer_picker, calcular_desde_picker
 from datetime import datetime
 import re
 
@@ -26,7 +26,8 @@ import io
 
 USERNAME_PASSWORD_PAIRS = [
     ['vikua', 'kunigo'],
-    ['Juan Andres', '12356']
+    ['Juan Andres', '12356'],
+    ['barranquila', 'barranquilla.2020']
 ]
 
 ready = []
@@ -376,14 +377,13 @@ app.layout = html.Div(
                             'Selecciona el día:'
                         ),
 
-
                             html.Div([
                                 dcc.DatePickerSingle(
                                     id='mydate',
-                                    min_date_allowed=datetime(2020, 5, 1),
-                                    max_date_allowed=datetime(2020, 6, 30),
-                                    initial_visible_month=datetime(2020, 6, 1),
-                                    date=str(datetime(2020, 6, 2).date()),
+                                    min_date_allowed=calcular_desde_picker(),
+                                    max_date_allowed=calcular_ayer_picker(),
+                                    initial_visible_month=calcular_ayer_picker(),
+                                    date=str(calcular_ayer_picker()),
                                 ),
                                
                             ]),            
@@ -711,7 +711,7 @@ def update_date_dropdown(date):
     [Input('mydate', 'date')]
 )
 def update_date_value(date):
-    return frame[date][0]
+    return frame[date][1]
 
 
 @app.callback(
@@ -761,7 +761,8 @@ def update_figure(rows, selected_row_indices):
         go.Scatter(x=dff['deviceTime'], y=dff['distancia'],
                         mode='lines+markers',
                         name='lines+markers',
-                        line = dict(color='red', width=2))
+                        #line = dict(color='red', width=2)
+                        line = {"shape": 'spline', "color": "red", "width":2})
         ])
 
     return go.Figure(data=data, layout=layout)
@@ -775,7 +776,7 @@ def update_figure(rows, selected_row_indices):
      Input('datatable', 'selected_row_indices')])
 def update_figure(rows, selected_row_indices):
     dff = pd.DataFrame(rows)
-
+    dist = (dff['distancia'].cumsum())/1000,
     layout = go.Layout(
         title="Distancia Acumulada en el día",
         #bargap=0.05,
@@ -812,8 +813,8 @@ def update_figure(rows, selected_row_indices):
     )
 
     data = Data([
-    
-        go.Scatter(x=dff['deviceTime'], y=dff['acum_distance'],
+
+        go.Scatter(x=dff['deviceTime'], y=dist,
                         mode='lines+markers',
                         name='lines+markers',
                         line = dict(color='orange', width=2))
@@ -920,6 +921,7 @@ def update_figure(rows, selected_row_indices):
     data = Data([
     
         go.Scatter(x=dff['deviceTime'], y=dff['attributes.batteryLevel'],
+                        fill='tozeroy',
                         mode='lines+markers',
                         name='lines+markers',
                         line = dict(color='red', width=2))

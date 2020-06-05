@@ -27,6 +27,15 @@ def calcular_ayer(hora):
     hoy = hoy + 'Z'
     return hoy
 
+def calcular_desde_picker():
+    hoy = datetime.datetime.combine(datetime.datetime.now().date() - datetime.timedelta(days=5), datetime.time(0,0,0))
+    hoy = hoy.date()
+    return hoy
+def calcular_ayer_picker():
+    ayer = datetime.datetime.combine(datetime.datetime.now().date() - datetime.timedelta(days=1), datetime.time(0,0,0))
+    ayer = ayer.date()
+    return ayer
+
 def get_part_of_day(hour):
     return (
         0 if  datetime.time(5, 0) <= hour <= datetime.time(11, 0)
@@ -107,11 +116,12 @@ def create_df():
     #Replace int id with string name deviceId in df_distance dataframe
     df_events['deviceId'] = df_events['deviceId'].replace(dic_devices)
     df_events["date"] = df_events['serverTime'].apply(lambda row: datetime.datetime.strptime(row, '%Y-%m-%dT%H:%M:%S.%f%z').date())
+    df_events["time"] = df_events['serverTime'].apply(lambda row: datetime.datetime.strptime(row, '%Y-%m-%dT%H:%M:%S.%f%z').time())
     df_events["strdate"] = df_events['serverTime'].apply(lambda row: datetime.datetime.strptime(row, '%Y-%m-%dT%H:%M:%S.%f%z').date().strftime('%Y-%m-%d'))
     df_events['type'] = df_events['type'].replace(['deviceOnline','deviceUnknown', 'deviceStopped', 'deviceMoving'  ],['En línea','Sin Conexión', 'Detenido', 'Moviendose'])
     #df_online = df_events[(df_events['type'] == 'En línea') | (df_events['type'] == 'Sin Conexión') ]
-    df_online = df_events[['deviceId', 'type', 'strdate', 'serverTime']]
-    df_online.rename(columns={'deviceId':'dispositivo', 'type':'tipo de evento', 'strdate':'dia'}, inplace=True)
+    df_online = df_events[['deviceId', 'type', 'strdate', 'time', 'serverTime']]
+    df_online.rename(columns={'deviceId':'dispositivo', 'type':'tipo de evento', 'strdate':'dia', 'time':'hora'}, inplace=True)
 
     #request get all events to all devices
     # response = requests.get(url + '/api/reports/trips?to={1}&from={0}&deviceId={2}'.format(desde, hasta, id_devices[0]), auth=(user, password), headers=headers, timeout=5.000)
