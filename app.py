@@ -711,7 +711,7 @@ def update_date_dropdown(date):
     [Input('mydate', 'date')]
 )
 def update_date_value(date):
-    return frame[date][1]
+    return frame[date][0]
 
 
 @app.callback(
@@ -761,8 +761,7 @@ def update_figure(rows, selected_row_indices):
         go.Scatter(x=dff['deviceTime'], y=dff['distancia'],
                         mode='lines+markers',
                         name='lines+markers',
-                        #line = dict(color='red', width=2)
-                        line = {"shape": 'spline', "color": "red", "width":2})
+                        line = dict(color='red', width=2))
         ])
 
     return go.Figure(data=data, layout=layout)
@@ -776,7 +775,7 @@ def update_figure(rows, selected_row_indices):
      Input('datatable', 'selected_row_indices')])
 def update_figure(rows, selected_row_indices):
     dff = pd.DataFrame(rows)
-    dist = (dff['distancia'].cumsum())/1000,
+
     layout = go.Layout(
         title="Distancia Acumulada en el día",
         #bargap=0.05,
@@ -813,8 +812,8 @@ def update_figure(rows, selected_row_indices):
     )
 
     data = Data([
-
-        go.Scatter(x=dff['deviceTime'], y=dist,
+    
+        go.Scatter(x=dff['deviceTime'], y=dff['distancia'].cumsum()/1000,
                         mode='lines+markers',
                         name='lines+markers',
                         line = dict(color='orange', width=2))
@@ -870,7 +869,7 @@ def update_figure(rows, selected_row_indices):
         go.Scatter(x=dff['deviceTime'], y=dff['speed_Km'],
                         mode='lines+markers',
                         name='lines+markers',
-                        line = dict(color='blue', width=2))
+                        line = dict(color='orange', width=2))
         ])
 
     return go.Figure(data=data, layout=layout)
