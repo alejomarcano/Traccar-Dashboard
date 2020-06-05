@@ -135,4 +135,5 @@ def create_df():
     # df_trips = df_trips[['deviceId', 'startTime', 'endTime', 'distance', 'strdate']]
     df_trips = df_events
     #the function return 3 dataframes and 1 dict
-    return df_distance, df_online, df_trips, frame
+    hora_mostrar = datetime.datetime.strptime(sorted(frame.keys())[-1], '%Y-%m-%d').date()
+    return df_distance, df_online, df_trips, frame, hora_mostrar

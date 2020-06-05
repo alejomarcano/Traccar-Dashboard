@@ -173,7 +173,7 @@ server = app.server
 
 
 
-map_data, df_events, df_trips, frame = create_df()
+map_data, df_events, df_trips, frame, hora_mostrar = create_df()
 #map_data = df_distance
 
 print('Este es el frame', frame)
@@ -383,7 +383,7 @@ app.layout = html.Div(
                                     min_date_allowed=calcular_desde_picker(),
                                     max_date_allowed=calcular_ayer_picker(),
                                     initial_visible_month=calcular_ayer_picker(),
-                                    date=str(calcular_ayer_picker()),
+                                    date=str(hora_mostrar),
                                 ),
                                
                             ]),            
