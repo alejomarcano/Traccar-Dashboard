@@ -63,9 +63,10 @@ def create_df():
     id_devices = df_devices['id'].to_list()
     df_devices =df_devices[['id', 'name']]
     dic_devices = df_devices.set_index('id')['name'].to_dict()
-    print()
+    ids_str = [str(i) for i in id_devices]
+    devices_str = '&deviceId=' + '&deviceId='.join(ids_str)
     #request to get all points to all devices
-    response = requests.get(url + '/api/reports/route?to={1}&from={0}&deviceId={2}&deviceId={3}&deviceId={4}&deviceId={5}'.format(desde, hasta, id_devices[0], id_devices[1], id_devices[2], id_devices[3] ), auth=(user, password), headers=headers, timeout=5.000)
+    response = requests.get(url + '/api/reports/route?to={1}&from={0}'.format(desde, hasta) + devices_str, auth=(user, password), headers=headers, timeout=5.000)
     #response = requests.get(url + '/api/reports/route?to={1}&from={0}&deviceId={2}'.format(desde, hasta, id_devices[0]), auth=(user, password), headers=headers, timeout=5.000)
     data = json.loads(response.content)
     dataframe = json_normalize(data)
@@ -108,10 +109,10 @@ def create_df():
     frame = seriee.to_dict()
     
     #request get all events to all devices
-    response = requests.get(url + '/api/reports/events?to={1}&from={0}&deviceId={2}&deviceId={3}&deviceId={4}&deviceId={5}'.format(desde, hasta, id_devices[0], id_devices[1], id_devices[2], id_devices[3]), auth=(user, password), headers=headers, timeout=5.000)
     #response = requests.get(url + '/api/reports/events?to={1}&from={0}&deviceId={2}'.format(desde, hasta, id_devices[0]), auth=(user, password), headers=headers, timeout=5.000)
+    rsp = requests.get(url + '/api/reports/events?to={1}&from={0}'.format(desde, hasta) + devices_str, auth=(user, password), headers=headers, timeout=5.000)
 
-    datosevents = json.loads(response.content)
+    datosevents = json.loads(rsp.content)
     df_events = json_normalize(datosevents)  
     #Replace int id with string name deviceId in df_distance dataframe
     df_events['deviceId'] = df_events['deviceId'].replace(dic_devices)
